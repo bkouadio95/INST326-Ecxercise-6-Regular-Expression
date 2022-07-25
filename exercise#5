@@ -1,0 +1,121 @@
+# Name: Kymani Brown & Betty Kouadio
+# Directory ID: Krown001 & HP (in respective order)
+# Date: 2020-10-23
+#Signed off by Andrew Ferguson
+# Assignment: Exercise 6
+
+import re
+
+def parse_name(text):
+    """This is function  uses regular expressions in order to capture the first name and last name of the person in question, 
+        function then returns a tuple containing the first and last name as strings
+
+    
+    Args:
+        text (str): a string representing a single line of the file
+
+    Return:
+        tuple (tuple): return a tuple containing the first and last name as strings.
+    """
+
+    name = re.compile(r"^(\w+)\s(\w+)").search(text) #this regex finds first and last name
+    first_name = name.group(1)
+    last_name = name.group(2)
+
+    tuple = (first_name,last_name)
+
+    return (tuple)
+
+def parse_address(text):
+    """This function parse address function  uses regular expressions in order to capture the street,
+        city and state of the person in question.
+
+    Args:
+        text (str): a string representing a single line of the file
+
+    Return:
+        full_address (tuple): return a tuple containing street city and state - making up the address
+    """
+
+    address = re.compile(r"(\d+\s.*)\s(\w+)\s([A-Z]{2})").search(text)
+
+    street = address.group(1)
+    city = address.group(2)
+    state = address.group(3)
+
+    full_address = (street, city, state)
+    return (full_address)
+
+def parse_email(text):
+    """This function use regular expressions in order to capture the email of the person in question.
+
+    Args:
+        text (str): a string representing a single line of the file
+
+    Return: 
+        full_mail (str): return the email identified
+    """
+
+    mail = re.compile(r"[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+").search(text)
+    full_mail = mail.group(0) #all
+
+    return (full_mail)
+
+class address:
+    """This class will have 3 attributes (street, city, state) that are created from
+        the arguments that are passed in when an instance of address is created.
+        
+        Args:
+            street (str): create street attribute
+            city (str): create city attribute
+            state (str): create state attribute
+    """
+    def __init__(self,street,city,state):
+        
+        self.street = street
+        self.city = city
+        self.state = state
+    
+class employee:
+    """This class will have 4 attributes (first_name, last_name, address, email)
+        These attributes will all be created by passing in a row of the file when an instance of employee is created
+    
+        Args:
+            first_name (str): create first name attribute by calling parse name with text and index 0
+            last_name (str): create last name attribute by calling parse name with text and index 1
+            address (str): create address attribute by calling parse address with text 
+            email (str): create email attribute by calling parse address with text 
+            
+    """    
+
+    def __init__(self,text):
+       
+        self.first_name = parse_name(text)[0] 
+        self.last_name = parse_name(text)[1]
+        self.address = parse_address(text)
+        self.email = parse_email(text)
+        
+            
+def main(path):
+    """This function called main has one parameter, path, which is the path to the file that is being parsed
+
+    Args:
+        path (sting): the file that is being parsed
+        
+    """    
+
+    employee_list = []
+    file = open(path, "r")
+    
+    for row in file:   
+        employee_list.append(employee(row))
+        print(parse_name(row))
+        print(parse_address(row))
+        print(parse_email(row))
+   
+    print("Number of employees :" + str(len(employee_list)))
+    print(employee_list)
+
+if __name__ == "__main__":
+    path = "people.txt"
+    main(path)
